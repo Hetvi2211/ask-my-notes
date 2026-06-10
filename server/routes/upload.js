@@ -2,9 +2,12 @@ const express = require("express");
 const multer = require("multer");
 const pdfParse = require("pdf-parse");
 
+const { logMetrics } = require("../utils/logMetrics");
 const { setPages } = require("../services/documentStore");
 const { generateEmbedding } = require("../services/embeddingService");
 const { saveChunks } = require("../services/chromaStore");
+
+const chunkers = require("../src/chunking");
 
 const router = express.Router();
 
@@ -24,30 +27,11 @@ const upload = multer({
   },
 });
 
-/**
- * Create text chunks with overlap
- */
-function chunkText(text, chunkSize = 1000, overlap = 200) {
-  const chunks = [];
-
-  let start = 0;
-
-  while (start < text.length) {
-    const end = start + chunkSize;
-
-    chunks.push({
-      page: chunks.length + 1,
-      text: text.slice(start, end).trim(),
-    });
-
-    start += chunkSize - overlap;
-  }
-
-  return chunks;
-}
-
 router.post("/", upload.single("file"), async (req, res) => {
+    const startTime = Date.now();
   try {
+    const strategy = req.query.strategy || "fixed";
+
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -57,11 +41,13 @@ router.post("/", upload.single("file"), async (req, res) => {
 
     const data = await pdfParse(req.file.buffer);
 
-    const pages = chunkText(
-      data.text,
-      1000, // chunk size
-      200   // overlap
-    );
+    // Apply selected chunking strategy
+    const pages = chunkers[strategy](data.text);
+
+    console.log("================================");
+    console.log("Chunking Strategy:", strategy);
+    console.log("Chunks Created:", pages.length);
+    console.log("================================");
 
     setPages(pages);
 
@@ -75,24 +61,46 @@ router.post("/", upload.single("file"), async (req, res) => {
 
     for (const page of pages) {
       const embedding = await generateEmbedding(
-        page.text
+        page.content
       );
 
       vectorChunks.push({
-        page: page.page,
-        text: page.text,
+        page: page.chunkId,
+        text: page.content,
         embedding,
       });
 
       console.log(
-        `[upload] Embedded chunk ${page.page}/${pages.length}`
+        `[upload] Embedded chunk ${page.chunkId}/${pages.length}`
       );
     }
 
     await saveChunks(vectorChunks);
 
+    const endTime = Date.now();
+
+    const retrievalTimeMs = endTime - startTime;
+
+    console.log("Retrieval Time:", retrievalTimeMs, "ms");
+
+    logMetrics({
+  strategy,
+  chunks: pages.length,
+  retrievalTimeMs,
+  notes:
+    strategy === "semantic"
+      ? "Better semantic grouping"
+      : strategy === "sliding"
+      ? "Better context continuity"
+      : strategy === "fixed"
+      ? "Fast and simple chunking"
+      : "Hierarchical experimental strategy",
+});
+
+
     return res.status(200).json({
       success: true,
+      strategy,
       chunksStored: vectorChunks.length,
       totalChunks: pages.length,
     });

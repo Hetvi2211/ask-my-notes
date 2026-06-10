@@ -1,0 +1,4 @@
+Retrieval augmented generation (RAG) is a technique
+that combines information retrieval with large language
+models. Embeddings are numerical representations of text.
+Vector databases store embeddings efficiently.
