@@ -8,14 +8,14 @@ const ai = new GoogleGenAI({
 
 async function askGemini(question, documentText) {
   const prompt = `
-You are a document assistant.
+You are a RAG document assistant.
 
-Answer ONLY from the document provided.
+Answer ONLY using the provided context.
 
-If the answer is not present in the document, return:
+If the answer is not found in the context, return:
 
 {
-  "answer": "Information not found in uploaded document.",
+  "answer": "Information not found in retrieved context.",
   "citations": []
 }
 
@@ -28,8 +28,9 @@ Format:
   "citations": [1]
 }
 
-DOCUMENT:
+CONTEXT:
 ${documentText}
+
 
 QUESTION:
 ${question}

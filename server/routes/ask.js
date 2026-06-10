@@ -1,7 +1,8 @@
 const express = require("express");
 
-const { getPages } = require("../services/documentStore");
 const { askGemini } = require("../services/geminiService");
+const { generateEmbedding } = require("../services/embeddingService");
+const { searchSimilar } = require("../services/chromaStore");
 
 const router = express.Router();
 
@@ -16,22 +17,30 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const pages = getPages();
+    const questionEmbedding =
+      await generateEmbedding(question);
 
-    if (pages.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: "Upload a PDF first",
-      });
-    }
+    const topChunks =
+      await searchSimilar(questionEmbedding, 2);
+    
+    console.log(
+      "Retrieved chunks:",
+     topChunks.map((chunk) => ({
+       page: chunk.page,
+       score: chunk.score.toFixed(4)
+    }))
+   );
 
-    const documentText = pages
-      .map((page) => page.text)
-      .join("\n");
+    const context = topChunks
+      .map(
+        (chunk) =>
+          `Page ${chunk.page}:\n${chunk.text}`
+      )
+      .join("\n\n");
 
     const result = await askGemini(
       question,
-      documentText
+      context
     );
 
     const cleaned = result.text
@@ -44,7 +53,9 @@ router.post("/", async (req, res) => {
     return res.status(200).json({
       success: true,
       answer: parsed.answer,
-      citations: parsed.citations || [],
+      citations:
+        parsed.citations ||
+        topChunks.map((c) => c.page),
       usage: {
         promptTokens:
           result.usage.promptTokenCount || 0,
@@ -53,6 +64,7 @@ router.post("/", async (req, res) => {
         totalTokens:
           result.usage.totalTokenCount || 0,
       },
+      retrievedChunks: topChunks.length,
     });
   } catch (error) {
     console.error("ASK ERROR:", error);
