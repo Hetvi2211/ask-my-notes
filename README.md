@@ -1,315 +1,244 @@
-# 📄 Ask My Notes
+# Day 14 — Multi-Step Agents
 
-AI-powered PDF Question Answering application that allows users to upload PDF documents and ask natural language questions about their content.
+## Overview
 
-Built using **React, Node.js, Express, PDF Parse, and Gemini AI**.
+This project demonstrates the implementation and comparison of multi-step AI agents using different approaches:
 
----
+- LangChain Agent
+- LlamaIndex Agent
+- Custom SDK Agent
 
-## 🚀 Project Overview
+The objective was to understand:
 
-Ask My Notes helps users interact with PDF documents through a conversational interface.
-
-Instead of manually searching through long documents, users can:
-
-✅ Upload a PDF
-
-✅ Extract text automatically
-
-✅ Ask questions in natural language
-
-✅ Get AI-generated answers
-
-✅ View source citations
-
-✅ Track token usage and telemetry
+- Tool orchestration
+- Agent workflows
+- ReAct-style reasoning
+- Memory implementation
+- Framework comparison
 
 ---
 
-## ✨ Features
-
-### 📤 PDF Upload
-
-* Upload PDF documents directly from the browser
-* Drag & Drop support
-* File validation
-* Automatic text extraction
-
-### 🤖 AI-Powered Q&A
-
-* Ask questions about uploaded documents
-* Context-aware responses
-* Gemini API integration
-* Fallback mode when API quota is unavailable
-
-### 📚 Citations
-
-* Shows document page references
-* Improves answer reliability
-* Makes responses traceable
-
-### 📊 Usage Analytics
-
-* Prompt token tracking
-* Completion token tracking
-* Total token usage
-
-### 🎨 Modern UI
-
-* Dark theme interface
-* Responsive design
-* Loading states
-* Error handling
-* Professional dashboard layout
-
----
-
-# 🏗️ Tech Stack
-
-## Frontend
-
-* React
-* Vite
-* Axios
-
-## Backend
-
-* Node.js
-* Express.js
-* Multer
-* PDF Parse
-
-## AI Integration
-
-* Gemini API
-
----
-
-# 📁 Project Structure
+# Project Structure
 
 ```text
-ask-my-notes
+agent-comparison/
 │
-├── client
-│   ├── src
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
-│   └── package.json
+├── langchain-agent/
+│   └── app.py
 │
-├── server
-│   ├── routes
-│   │   ├── upload.js
-│   │   └── ask.js
-│   │
-│   ├── services
-│   │   ├── geminiService.js
-│   │   └── documentStore.js
-│   │
-│   ├── app.js
-│   └── package.json
+├── llamaindex-agent/
+│   └── app.py
 │
-├── screenshots
+├── custom-agent/
+│   └── app.js
 │
-├── README.md
-└── .gitignore
+├── memory/
+│   └── memory-notes.md
+│
+├── screenshots/
+│
+├── comparison-report.md
+│
+└── README.md
 ```
 
 ---
 
-# ⚙️ Installation
+# Implementations
 
-## Clone Repository
+## 1. LangChain Agent
 
-```bash
-git clone https://github.com/YOUR_USERNAME/ask-my-notes.git
+Features:
 
-cd ask-my-notes
-```
+- Tool-based workflow
+- Calculator tool
+- Search tool
+- Agent reasoning simulation
 
----
-
-## Backend Setup
-
-```bash
-cd server
-
-npm install
-
-node app.js
-```
-
-Backend runs on:
+Example:
 
 ```text
-http://localhost:5000
+Input:
+45 * 12
+
+Output:
+Tool Used: Calculator
+Answer: 540
 ```
 
 ---
 
-## Frontend Setup
+## 2. LlamaIndex Agent
 
-```bash
-cd client
+Features:
 
-npm install
+- ReAct-style workflow
+- Tool invocation
+- Query handling
+- Agent execution flow
 
-npm run dev
-```
-
-Frontend runs on:
+Example:
 
 ```text
-http://localhost:5173
+Input:
+Multiply 15 and 9
+
+Output:
+Thought: Use calculator tool
+Answer: 135
 ```
 
 ---
 
-# 🔑 Environment Variables
+## 3. Custom SDK Agent
 
-Create:
+Features:
+
+- Manual tool orchestration
+- Calculator tool
+- Search tool
+- Conversation memory
+- Custom agent loop
+
+Example:
 
 ```text
-server/.env
-```
+Input:
+45 * 12
 
-Add:
-
-```env
-GEMINI_API_KEY=your_api_key_here
-```
-
----
-
-# 📡 API Endpoints
-
-## Upload PDF
-
-```http
-POST /api/upload
-```
-
-### Request
-
-```form-data
-file : pdf
-```
-
-### Response
-
-```json
-{
-  "success": true
-}
+Output:
+Tool Used: Calculator
+Final Response: 540
 ```
 
 ---
 
-## Ask Question
+# Memory Implementation
 
-```http
-POST /api/ask
-```
+Implemented memory using conversation history tracking.
 
-### Request
+Supported:
 
-```json
-{
-  "question": "What is the student's CGPA?"
-}
-```
+- Short-term memory
+- Context persistence
+- Follow-up question handling
 
-### Response
-
-```json
-{
-  "success": true,
-  "answer": "The student's CGPA is 8.56 / 10.",
-  "citations": [1],
-  "usage": {
-    "promptTokens": 120,
-    "completionTokens": 30,
-    "totalTokens": 150
-  }
-}
-```
-
----
-
-# 🖼️ Screenshots
-
-## Home Screen
-
-![Home Screen](./screenshots/home.png)
-
----
-
-## Ask Question-Answer
-
-![Ask Question-Answer](./screenshots/ask-question-answer-response.png)
-
----
-
-## Postman Testing
-
-![Postman](./screenshots/postman-upload.png)
-![Postman](./screenshots/postman-ask.png)
-
----
-
-# 🔄 Application Flow
+Example:
 
 ```text
-User Uploads PDF
-        │
-        ▼
-PDF Text Extraction
-        │
-        ▼
-Store Document Content
-        │
-        ▼
-User Asks Question
-        │
-        ▼
-Gemini API Processing
-        │
-        ▼
-Generate Answer
-        │
-        ▼
-Return Citations + Token Usage
+User:
+My favorite language is Python
+
+User:
+What is my favorite language?
+
+Agent:
+Your favorite language is Python
+```
+
+Detailed notes are available in:
+
+```text
+memory/memory-notes.md
 ```
 
 ---
-# Live Link
-[Live Link](https://ask-my-notes-dusky.vercel.app/)
 
-# 🎯 Learning Outcomes
+# Framework Comparison
+
+Comparison between:
+
+- LangChain
+- LlamaIndex
+- Custom SDK Agent
+
+See:
+
+```text
+comparison-report.md
+```
+
+Key observations:
+
+| Feature | LangChain | LlamaIndex | Custom SDK |
+|----------|------------|------------|------------|
+| Ease of Use | High | Medium | Medium |
+| Tool Calling | Built-in | Built-in | Manual |
+| Memory Support | Good | Good | Custom |
+| Flexibility | Medium | Medium | High |
+| Learning Value | High | High | Very High |
+
+---
+
+# Screenshots
+
+Screenshots are available in:
+
+```text
+screenshots/
+```
+
+Included:
+
+- langchain-agent.png
+- llamaindex-agent.png
+- custom-agent.png
+- memory-demo.png
+- framework-comparison.png
+
+---
+
+# Technologies Used
+
+- Python
+- Node.js
+- Gemini API
+- LangChain
+- LlamaIndex
+- dotenv
+
+---
+
+# Learning Outcomes
 
 Through this project I learned:
 
-* PDF processing using Node.js
-* File uploads with Multer
-* REST API development
-* Gemini API integration
-* Prompt engineering
-* React state management
-* Error handling strategies
-* Token usage tracking
-* Building AI-powered applications
+- Multi-step agent architecture
+- Tool orchestration
+- ReAct workflows
+- Agent memory concepts
+- Framework comparison
+- Custom AI agent implementation
+- Conversational context handling
 
 ---
 
-# 🚀 Future Improvements
+# Known Issues
 
-* Vector Database Integration
-* Semantic Search
-* RAG Architecture
-* Multi-document Support
-* Authentication & Authorization
-* Chat History
-* Document Summarization
-* Cloud Storage Integration
+During implementation, version compatibility issues were encountered between:
 
+- LangChain
+- LangChain Core
+- LangChain Google GenAI
+
+Recent package releases introduced breaking API changes that affected older examples using:
+
+```python
+initialize_agent()
+```
+
+and Gemini integrations.
+
+Because of these framework version conflicts, the LangChain implementation was adapted for demonstration purposes while preserving the agent workflow concepts.
+
+The LlamaIndex and Custom SDK implementations were completed successfully and demonstrate the intended multi-step agent behavior, tool usage, and memory handling.
+
+---
+
+# Author
+
+Hetvi Rabari
+
+B.Tech Artificial Intelligence & Machine Learning
+
+Day 14 Internship Project — Multi-Step Agents
