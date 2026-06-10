@@ -1,315 +1,366 @@
-# 📄 Ask My Notes
+# Ask My Notes — Day 12
 
-AI-powered PDF Question Answering application that allows users to upload PDF documents and ask natural language questions about their content.
+## Chunking + Retrieval Strategies in RAG
 
-Built using **React, Node.js, Express, PDF Parse, and Gemini AI**.
-
----
-
-## 🚀 Project Overview
-
-Ask My Notes helps users interact with PDF documents through a conversational interface.
-
-Instead of manually searching through long documents, users can:
-
-✅ Upload a PDF
-
-✅ Extract text automatically
-
-✅ Ask questions in natural language
-
-✅ Get AI-generated answers
-
-✅ View source citations
-
-✅ Track token usage and telemetry
+AI-powered PDF Question Answering system with multiple chunking strategies, retrieval experimentation, embeddings, and vector search using ChromaDB.
 
 ---
 
-## ✨ Features
+# 🚀 Day 12 Objectives
 
-### 📤 PDF Upload
+This implementation focuses on:
 
-* Upload PDF documents directly from the browser
-* Drag & Drop support
-* File validation
-* Automatic text extraction
-
-### 🤖 AI-Powered Q&A
-
-* Ask questions about uploaded documents
-* Context-aware responses
-* Gemini API integration
-* Fallback mode when API quota is unavailable
-
-### 📚 Citations
-
-* Shows document page references
-* Improves answer reliability
-* Makes responses traceable
-
-### 📊 Usage Analytics
-
-* Prompt token tracking
-* Completion token tracking
-* Total token usage
-
-### 🎨 Modern UI
-
-* Dark theme interface
-* Responsive design
-* Loading states
-* Error handling
-* Professional dashboard layout
+* Fixed Chunking
+* Sliding Window Chunking
+* Semantic Chunking
+* Hierarchical Chunking
+* Retrieval experimentation
+* Retrieval metrics logging
+* Chunking strategy comparison
+* Cohere reranker research
 
 ---
 
-# 🏗️ Tech Stack
+# 🧠 What is Chunking?
 
-## Frontend
+Chunking is the process of splitting large documents into smaller pieces before generating embeddings.
 
-* React
-* Vite
-* Axios
+Good chunking improves:
 
-## Backend
-
-* Node.js
-* Express.js
-* Multer
-* PDF Parse
-
-## AI Integration
-
-* Gemini API
+* retrieval quality
+* context preservation
+* answer accuracy
+* RAG performance
 
 ---
 
-# 📁 Project Structure
+# 📂 Project Structure
 
-```text
-ask-my-notes
+```bash
+server/
 │
-├── client
-│   ├── src
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
-│   └── package.json
+├── src/
+│   └── chunking/
+│       ├── fixedChunking.js
+│       ├── slidingWindowChunking.js
+│       ├── semanticChunking.js
+│       ├── hierarchicalChunking.js
+│       └── index.js
 │
-├── server
-│   ├── routes
-│   │   ├── upload.js
-│   │   └── ask.js
-│   │
-│   ├── services
-│   │   ├── geminiService.js
-│   │   └── documentStore.js
-│   │
-│   ├── app.js
-│   └── package.json
+├── reports/
+│   ├── chunking-comparison-report.md
+│   ├── retrievalMetrics.json
+│   └── cohere-reranker-notes.md
 │
-├── screenshots
+├── screenshots/
+│   ├── retrieval-fixed.png
+│   ├── retrieval-sliding.png
+│   ├── retrieval-semantic.png
+│   ├── metrics-json.png
+│   ├── chunking-report.png
+│   └── cohere-reranker-notes.png
 │
-├── README.md
-└── .gitignore
+├── routes/
+│   └── upload.js
+│
+├── services/
+│   ├── chromaStore.js
+│   ├── embeddingService.js
+│   └── documentStore.js
+│
+├── app.js
+└── package.json
 ```
 
 ---
 
-# ⚙️ Installation
+# ⚡ Implemented Chunking Strategies
+
+## 1. Fixed Chunking
+
+Splits text into equal-sized chunks.
+
+Example:
+
+```txt
+0–500
+450–950
+900–1400
+```
+
+### Features
+
+* Simple
+* Fast
+* Predictable chunk sizes
+
+---
+
+## 2. Sliding Window Chunking
+
+Uses larger overlap between chunks to preserve context continuity.
+
+Example:
+
+```txt
+Chunk 1 → 0–500
+Chunk 2 → 300–800
+```
+
+### Features
+
+* Better context retention
+* Improved answer consistency
+
+---
+
+## 3. Semantic Chunking
+
+Splits text based on:
+
+* paragraphs
+* headings
+* semantic boundaries
+
+### Features
+
+* Natural chunk boundaries
+* Better semantic understanding
+
+---
+
+## 4. Hierarchical Chunking
+
+Creates:
+
+* parent chunks
+* child chunks
+
+### Features
+
+* Multi-level retrieval
+* Better large-document organization
+
+---
+
+# 🔄 Retrieval Pipeline
+
+```txt
+PDF Upload
+    ↓
+PDF Text Extraction
+    ↓
+Selected Chunking Strategy
+    ↓
+Embeddings Generation
+    ↓
+ChromaDB Vector Storage
+    ↓
+Similarity Search
+    ↓
+LLM Response
+```
+
+---
+
+# 🛠️ Dynamic Chunking Strategy Selection
+
+The upload API supports dynamic chunking strategies.
+
+Examples:
+
+```bash
+http://localhost:5000/api/upload?strategy=fixed
+```
+
+```bash
+http://localhost:5000/api/upload?strategy=sliding
+```
+
+```bash
+http://localhost:5000/api/upload?strategy=semantic
+```
+
+```bash
+http://localhost:5000/api/upload?strategy=hierarchical
+```
+
+---
+
+# 📊 Retrieval Metrics
+
+The system logs:
+
+* chunk count
+* retrieval time
+* strategy used
+* answer quality observations
+
+Metrics are stored in:
+
+```bash
+reports/retrievalMetrics.json
+```
+
+---
+
+# 📈 Chunking Experiment Results
+
+| Strategy     | Chunks Created | Context Quality | Speed  | Embedding Cost |
+| ------------ | -------------- | --------------- | ------ | -------------- |
+| Fixed        | 6              | Medium          | Fast   | Medium         |
+| Sliding      | 8              | High            | Medium | High           |
+| Semantic     | 1              | High            | Fast   | Low            |
+| Hierarchical | Experimental   | High            | Medium | Medium         |
+
+---
+
+# 🧪 Cohere Reranker Research
+
+Studied:
+
+* first-pass retrieval
+* second-pass retrieval
+* reranking
+* Cohere Rerank pipeline
+
+Documented in:
+
+```bash
+reports/cohere-reranker-notes.md
+```
+
+---
+
+# 📸 Screenshots
+
+## Retrieval Metrics
+
+![Retrieval Metrics](screenshots/metrics-json.png)
+
+## Fixed Chunking
+
+![Fixed Chunking](screenshots/retrieval-fixed.png)
+
+## Sliding Window Chunking
+
+![Sliding Window Chunking](screenshots/retrieval-sliding.png)
+
+## Semantic Chunking
+
+![Semantic Chunking](screenshots/retrieval-semantic.png)
+
+## Chunking Comparison Report
+
+![Chunking Comparison Report](screenshots/chunking-report.png)
+
+## Cohere Reranker Notes
+
+![Cohere Reranker Notes](screenshots/cohere-reranker-notes.png)
+
+---
+
+# 🧠 Technologies Used
+
+* Node.js
+* Express.js
+* ChromaDB
+* Xenova Transformers
+* PDF Parse
+* React.js
+* Gemini API
+* Embeddings
+* RAG Pipeline
+
+---
+
+# 🚀 Installation
 
 ## Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ask-my-notes.git
-
-cd ask-my-notes
+git clone <your-repo-url>
 ```
 
 ---
 
-## Backend Setup
+## Install Backend Dependencies
 
 ```bash
 cd server
-
 npm install
-
-node app.js
-```
-
-Backend runs on:
-
-```text
-http://localhost:5000
 ```
 
 ---
 
-## Frontend Setup
+## Install Frontend Dependencies
 
 ```bash
 cd client
-
 npm install
+```
 
+---
+
+# ▶️ Run Backend
+
+```bash
+cd server
 npm run dev
 ```
 
-Frontend runs on:
+---
 
-```text
-http://localhost:5173
+# ▶️ Run Frontend
+
+```bash
+cd client
+npm run dev
 ```
 
 ---
 
-# 🔑 Environment Variables
+# 🧪 Testing Chunking Strategies
 
-Create:
+Upload PDFs using different strategies:
 
-```text
-server/.env
+## Fixed
+
+```bash
+http://localhost:5000/api/upload?strategy=fixed
 ```
 
-Add:
+## Sliding
 
-```env
-GEMINI_API_KEY=your_api_key_here
+```bash
+http://localhost:5000/api/upload?strategy=sliding
 ```
 
----
+## Semantic
 
-# 📡 API Endpoints
-
-## Upload PDF
-
-```http
-POST /api/upload
-```
-
-### Request
-
-```form-data
-file : pdf
-```
-
-### Response
-
-```json
-{
-  "success": true
-}
+```bash
+http://localhost:5000/api/upload?strategy=semantic
 ```
 
 ---
 
-## Ask Question
+# ✅ Day 12 Deliverables Completed
 
-```http
-POST /api/ask
-```
-
-### Request
-
-```json
-{
-  "question": "What is the student's CGPA?"
-}
-```
-
-### Response
-
-```json
-{
-  "success": true,
-  "answer": "The student's CGPA is 8.56 / 10.",
-  "citations": [1],
-  "usage": {
-    "promptTokens": 120,
-    "completionTokens": 30,
-    "totalTokens": 150
-  }
-}
-```
+* ✅ Implemented 4 chunking strategies
+* ✅ Dynamic strategy selector
+* ✅ Retrieval experimentation
+* ✅ Retrieval metrics logging
+* ✅ Chunking comparison report
+* ✅ Cohere reranker research
+* ✅ Updated README
+* ✅ Screenshots documentation
 
 ---
 
-# 🖼️ Screenshots
+# 📚 Key Learnings
 
-## Home Screen
-
-![Home Screen](./screenshots/home.png)
-
----
-
-## Ask Question-Answer
-
-![Ask Question-Answer](./screenshots/ask-question-answer-response.png)
-
----
-
-## Postman Testing
-
-![Postman](./screenshots/postman-upload.png)
-![Postman](./screenshots/postman-ask.png)
-
----
-
-# 🔄 Application Flow
-
-```text
-User Uploads PDF
-        │
-        ▼
-PDF Text Extraction
-        │
-        ▼
-Store Document Content
-        │
-        ▼
-User Asks Question
-        │
-        ▼
-Gemini API Processing
-        │
-        ▼
-Generate Answer
-        │
-        ▼
-Return Citations + Token Usage
-```
-
----
-# Live Link
-[Live Link](https://ask-my-notes-dusky.vercel.app/)
-
-# 🎯 Learning Outcomes
-
-Through this project I learned:
-
-* PDF processing using Node.js
-* File uploads with Multer
-* REST API development
-* Gemini API integration
-* Prompt engineering
-* React state management
-* Error handling strategies
-* Token usage tracking
-* Building AI-powered applications
-
----
-
-# 🚀 Future Improvements
-
-* Vector Database Integration
-* Semantic Search
-* RAG Architecture
-* Multi-document Support
-* Authentication & Authorization
-* Chat History
-* Document Summarization
-* Cloud Storage Integration
-
+* Chunking significantly affects RAG quality
+* Sliding window preserves context effectively
+* Semantic chunking improves natural retrieval
+* Retrieval evaluation is critical in production RAG systems
+* Reranking improves second-pass retrieval quality
