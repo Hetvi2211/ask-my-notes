@@ -311,16 +311,3 @@ Through this project I learned:
 * Document Summarization
 * Cloud Storage Integration
 
----
-
-# 👩‍💻 Author
-
-**Hetvi Rabari**
-
-B.Tech Artificial Intelligence & Machine Learning
-
-CHARUSAT University
-
-GitHub: https://github.com/YOUR_USERNAME
-
-LinkedIn: https://linkedin.com/in/YOUR_PROFILE
