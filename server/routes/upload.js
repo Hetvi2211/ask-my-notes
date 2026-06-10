@@ -3,6 +3,8 @@ const multer = require("multer");
 const pdfParse = require("pdf-parse");
 
 const { setPages } = require("../services/documentStore");
+const { generateEmbedding } = require("../services/embeddingService");
+const { saveChunks } = require("../services/chromaStore");
 
 const router = express.Router();
 
@@ -22,6 +24,28 @@ const upload = multer({
   },
 });
 
+/**
+ * Create text chunks with overlap
+ */
+function chunkText(text, chunkSize = 1000, overlap = 200) {
+  const chunks = [];
+
+  let start = 0;
+
+  while (start < text.length) {
+    const end = start + chunkSize;
+
+    chunks.push({
+      page: chunks.length + 1,
+      text: text.slice(start, end).trim(),
+    });
+
+    start += chunkSize - overlap;
+  }
+
+  return chunks;
+}
+
 router.post("/", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
@@ -33,18 +57,44 @@ router.post("/", upload.single("file"), async (req, res) => {
 
     const data = await pdfParse(req.file.buffer);
 
-    const pages = [
-      {
-        page: 1,
-        text: data.text,
-      },
-    ];
+    const pages = chunkText(
+      data.text,
+      1000, // chunk size
+      200   // overlap
+    );
 
     setPages(pages);
 
+    console.log(
+      `[upload] Created ${pages.length} chunks`
+    );
+
+    console.log("Generating embeddings...");
+
+    const vectorChunks = [];
+
+    for (const page of pages) {
+      const embedding = await generateEmbedding(
+        page.text
+      );
+
+      vectorChunks.push({
+        page: page.page,
+        text: page.text,
+        embedding,
+      });
+
+      console.log(
+        `[upload] Embedded chunk ${page.page}/${pages.length}`
+      );
+    }
+
+    await saveChunks(vectorChunks);
+
     return res.status(200).json({
       success: true,
-      pages,
+      chunksStored: vectorChunks.length,
+      totalChunks: pages.length,
     });
   } catch (err) {
     console.error(err);
