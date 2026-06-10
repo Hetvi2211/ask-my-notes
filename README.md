@@ -1,180 +1,103 @@
-# 📄 Ask My Notes
+# 🤖 Gemini Tool Agent
 
-AI-powered PDF Question Answering application that allows users to upload PDF documents and ask natural language questions about their content.
+An AI-powered CLI Tool Agent built using the Gemini API with Function Calling and Multi-Tool Orchestration.
 
-Built using **React, Node.js, Express, PDF Parse, and Gemini AI**.
+This project demonstrates how LLMs can intelligently choose and execute tools such as:
 
----
+* Calculator
+* Web Search
+* Slack Webhook
 
-## 🚀 Project Overview
-
-Ask My Notes helps users interact with PDF documents through a conversational interface.
-
-Instead of manually searching through long documents, users can:
-
-✅ Upload a PDF
-
-✅ Extract text automatically
-
-✅ Ask questions in natural language
-
-✅ Get AI-generated answers
-
-✅ View source citations
-
-✅ Track token usage and telemetry
+The agent uses JSON schema-based tool definitions and Gemini Function Calling to dynamically select the correct tool based on the user query.
 
 ---
 
-## ✨ Features
+# 🚀 Features
 
-### 📤 PDF Upload
-
-* Upload PDF documents directly from the browser
-* Drag & Drop support
-* File validation
-* Automatic text extraction
-
-### 🤖 AI-Powered Q&A
-
-* Ask questions about uploaded documents
-* Context-aware responses
-* Gemini API integration
-* Fallback mode when API quota is unavailable
-
-### 📚 Citations
-
-* Shows document page references
-* Improves answer reliability
-* Makes responses traceable
-
-### 📊 Usage Analytics
-
-* Prompt token tracking
-* Completion token tracking
-* Total token usage
-
-### 🎨 Modern UI
-
-* Dark theme interface
-* Responsive design
-* Loading states
-* Error handling
-* Professional dashboard layout
+✅ Gemini Function Calling
+✅ JSON Schema Tool Definitions
+✅ Calculator Tool
+✅ Web Search Tool
+✅ Slack Webhook Tool
+✅ Multi-Tool Orchestration
+✅ CLI-Based Agent Workflow
+✅ Tool Selection by LLM
+✅ Structured Tool Responses
 
 ---
 
-# 🏗️ Tech Stack
+# 📂 Project Structure
 
-## Frontend
-
-* React
-* Vite
-* Axios
-
-## Backend
-
-* Node.js
-* Express.js
-* Multer
-* PDF Parse
-
-## AI Integration
-
-* Gemini API
-
----
-
-# 📁 Project Structure
-
-```text
-ask-my-notes
+```bash
+tool-agent/
 │
-├── client
-│   ├── src
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
-│   └── package.json
+├── app.js
 │
-├── server
-│   ├── routes
-│   │   ├── upload.js
-│   │   └── ask.js
-│   │
-│   ├── services
-│   │   ├── geminiService.js
-│   │   └── documentStore.js
-│   │
-│   ├── app.js
-│   └── package.json
+├── tools/
+│   ├── calculator.js
+│   ├── webSearch.js
+│   └── slackWebhook.js
 │
-├── screenshots
+├── schemas/
+│   └── tools.js
 │
-├── README.md
-└── .gitignore
+├── screenshots/
+│   ├── calculator-agent.png
+│   ├── web-search-agent.png
+│   ├── slack-agent.png
+│   └── multi-tool-agent.png
+│
+├── .env
+├── package.json
+└── README.md
 ```
+
+---
+
+# 🧠 Concepts Learned
+
+This project focuses on core AI agent engineering concepts:
+
+* Function Calling
+* Tool Use
+* Tool Selection
+* JSON Schema Design
+* Multi-Tool Agents
+* Structured Outputs
+* Agent Workflows
+* Tool Orchestration
 
 ---
 
 # ⚙️ Installation
 
-## Clone Repository
+## 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ask-my-notes.git
-
-cd ask-my-notes
+git clone <YOUR_GITHUB_REPO>
 ```
 
 ---
 
-## Backend Setup
+## 2️⃣ Move Into Project
 
 ```bash
-cd server
-
-npm install
-
-node app.js
-```
-
-Backend runs on:
-
-```text
-http://localhost:5000
+cd tool-agent
 ```
 
 ---
 
-## Frontend Setup
+## 3️⃣ Install Dependencies
 
 ```bash
-cd client
-
 npm install
-
-npm run dev
-```
-
-Frontend runs on:
-
-```text
-http://localhost:5173
 ```
 
 ---
 
 # 🔑 Environment Variables
 
-Create:
-
-```text
-server/.env
-```
-
-Add:
+Create a `.env` file:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
@@ -182,134 +105,237 @@ GEMINI_API_KEY=your_api_key_here
 
 ---
 
-# 📡 API Endpoints
+# ▶️ Run Project
 
-## Upload PDF
-
-```http
-POST /api/upload
-```
-
-### Request
-
-```form-data
-file : pdf
-```
-
-### Response
-
-```json
-{
-  "success": true
-}
+```bash
+node app.js
 ```
 
 ---
 
-## Ask Question
+# 🛠 Available Tools
 
-```http
-POST /api/ask
+---
+
+## ➕ Calculator Tool
+
+Supports:
+
+* Add
+* Subtract
+* Multiply
+* Divide
+
+### Example
+
+```bash
+What is 45 multiplied by 12?
 ```
 
-### Request
+### Output
 
-```json
-{
-  "question": "What is the student's CGPA?"
-}
+```bash
+540
 ```
 
-### Response
+---
 
-```json
+## 🌐 Web Search Tool
+
+Performs basic web search simulation.
+
+### Example
+
+```bash
+Who is the CEO of Google?
+```
+
+### Output
+
+```bash
+Sundar Pichai
+```
+
+---
+
+## 📢 Slack Webhook Tool
+
+Simulates sending Slack notifications.
+
+### Example
+
+```bash
+Send a Slack notification saying deployment completed
+```
+
+### Output
+
+```bash
+Slack notification sent successfully
+```
+
+---
+
+# 🔄 Multi-Tool Orchestration
+
+The AI agent can dynamically choose tools based on user prompts.
+
+### Example Workflow
+
+```text
+User Prompt
+    ↓
+Gemini selects tool
+    ↓
+Tool executes
+    ↓
+Result returned
+    ↓
+Final AI response generated
+```
+
+---
+
+# 🧩 Tool Schema Example
+
+Example JSON schema used for function calling:
+
+```js
 {
-  "success": true,
-  "answer": "The student's CGPA is 8.56 / 10.",
-  "citations": [1],
-  "usage": {
-    "promptTokens": 120,
-    "completionTokens": 30,
-    "totalTokens": 150
+  name: "calculator",
+  description: "Perform arithmetic operations",
+  parameters: {
+    type: "object",
+    properties: {
+      operation: {
+        type: "string"
+      },
+      a: {
+        type: "number"
+      },
+      b: {
+        type: "number"
+      }
+    }
   }
 }
 ```
 
 ---
 
-# 🖼️ Screenshots
-
-## Home Screen
-
-![Home Screen](./screenshots/home.png)
+# 🧪 Example CLI Outputs
 
 ---
 
-## Ask Question-Answer
+## Calculator Agent
 
-![Ask Question-Answer](./screenshots/ask-question-answer-response.png)
+```bash
+Ask something: What is 45 multiplied by 12?
 
----
+🛠 TOOL SELECTED:
+calculator
 
-## Postman Testing
-
-![Postman](./screenshots/postman-upload.png)
-![Postman](./screenshots/postman-ask.png)
-
----
-
-# 🔄 Application Flow
-
-```text
-User Uploads PDF
-        │
-        ▼
-PDF Text Extraction
-        │
-        ▼
-Store Document Content
-        │
-        ▼
-User Asks Question
-        │
-        ▼
-Gemini API Processing
-        │
-        ▼
-Generate Answer
-        │
-        ▼
-Return Citations + Token Usage
+✅ TOOL RESULT:
+540
 ```
 
 ---
-# Live Link
-[Live Link](https://ask-my-notes-dusky.vercel.app/)
 
-# 🎯 Learning Outcomes
+## Web Search Agent
 
-Through this project I learned:
+```bash
+Ask something: Who is the CEO of Google?
 
-* PDF processing using Node.js
-* File uploads with Multer
-* REST API development
-* Gemini API integration
-* Prompt engineering
-* React state management
-* Error handling strategies
-* Token usage tracking
-* Building AI-powered applications
+🛠 TOOL SELECTED:
+webSearch
+```
 
 ---
 
-# 🚀 Future Improvements
+## Slack Webhook Agent
 
-* Vector Database Integration
-* Semantic Search
-* RAG Architecture
-* Multi-document Support
-* Authentication & Authorization
-* Chat History
-* Document Summarization
-* Cloud Storage Integration
+```bash
+Ask something: Send a Slack notification saying deployment completed
 
+🛠 TOOL SELECTED:
+slackWebhook
+```
+
+---
+
+# 📸 Screenshots
+
+---
+## 🧮 Calculator Tool
+
+![Calculator Tool](tool-agent/screenshots/calculator-agent.png)
+
+---
+
+## 🌐 Web Search Tool
+
+![Web Search Tool](tool-agent/screenshots/web-search-agent.png)
+
+---
+
+## 📩 Slack Webhook Tool
+
+![Slack Webhook Tool](tool-agent/screenshots/slack-agent.png)
+
+---
+
+## 🤖 Multi Tool Agent
+
+![Multi Tool Agent](screenshots/multi-tool-agent.png)
+
+---
+
+# 🏗 Tech Stack
+
+* Node.js
+* Gemini API
+* Google Generative AI SDK
+* JavaScript
+* dotenv
+* readline-sync
+
+---
+
+# 📚 Day 13 Internship Deliverables
+
+Implemented:
+
+✅ Tool Use
+✅ Function Calling
+✅ JSON Schema Design
+✅ Calculator Agent
+✅ Web Search Tool
+✅ Slack Webhook Tool
+✅ Multi-Tool Agent
+✅ Tool Orchestration
+✅ CLI Agent Workflow
+
+---
+
+# 🔮 Future Improvements
+
+* Real Tavily API Integration
+* Real Slack Webhook Integration
+* Browser-Based UI
+* Memory Support
+* Agent Planning
+* Autonomous Tool Chaining
+
+---
+
+
+# ⭐ Learning Outcome
+
+This project demonstrates practical understanding of:
+
+* AI Agents
+* Function Calling
+* Tool Orchestration
+* LLM Workflows
+* Multi-Step Reasoning
+* Structured Tool Execution
