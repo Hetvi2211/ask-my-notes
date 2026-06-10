@@ -335,11 +335,18 @@ export default function App() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const { data } = await axios.post(`${API}/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+     const { data } = await axios.post(
+  `${API}/upload?strategy=semantic`,
+  formData,
+  {
+    headers: { "Content-Type": "multipart/form-data" },
+  }
+);
       if (data.success) {
-        setPages(data.pages);
+        setPages( Array.from(
+    { length: data.totalChunks || 0 },
+    (_, i) => i + 1
+  ));
         setUploadSuccess(true);
       } else {
         setUploadError(data.error || "Upload failed.");

@@ -1,0 +1,26 @@
+[
+  {
+    "strategy": "sliding",
+    "chunks": 8,
+    "retrievalTimeMs": 1983,
+    "notes": "Better context continuity"
+  },
+  {
+    "strategy": "sliding",
+    "chunks": 8,
+    "retrievalTimeMs": 1068,
+    "notes": "Better context continuity"
+  },
+  {
+    "strategy": "fixed",
+    "chunks": 6,
+    "retrievalTimeMs": 1433,
+    "notes": "Fast and simple chunking"
+  },
+  {
+    "strategy": "semantic",
+    "chunks": 1,
+    "retrievalTimeMs": 1098,
+    "notes": "Better semantic grouping"
+  }
+]
