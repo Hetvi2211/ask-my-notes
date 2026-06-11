@@ -1,315 +1,262 @@
-# 📄 Ask My Notes
+Since Day 16 is **Real Repo Onboarding**, the README should focus on **understanding the codebase, identifying a bug, root-cause analysis, and the proposed fix plan** rather than building a new project.
 
-AI-powered PDF Question Answering application that allows users to upload PDF documents and ask natural language questions about their content.
-
-Built using **React, Node.js, Express, PDF Parse, and Gemini AI**.
+You can directly paste the following into `README.md`:
 
 ---
 
-## 🚀 Project Overview
+# Day 16 – Real Repo Onboarding & PR Planning
 
-Ask My Notes helps users interact with PDF documents through a conversational interface.
+## Objective
 
-Instead of manually searching through long documents, users can:
-
-✅ Upload a PDF
-
-✅ Extract text automatically
-
-✅ Ask questions in natural language
-
-✅ Get AI-generated answers
-
-✅ View source citations
-
-✅ Track token usage and telemetry
+The goal of Day 16 was to onboard onto an existing codebase, understand the project architecture using AI tools, identify a bug, analyze its root cause, and prepare a PR draft with a proposed fix.
 
 ---
 
-## ✨ Features
+# Repository Overview
 
-### 📤 PDF Upload
-
-* Upload PDF documents directly from the browser
-* Drag & Drop support
-* File validation
-* Automatic text extraction
-
-### 🤖 AI-Powered Q&A
-
-* Ask questions about uploaded documents
-* Context-aware responses
-* Gemini API integration
-* Fallback mode when API quota is unavailable
-
-### 📚 Citations
-
-* Shows document page references
-* Improves answer reliability
-* Makes responses traceable
-
-### 📊 Usage Analytics
-
-* Prompt token tracking
-* Completion token tracking
-* Total token usage
-
-### 🎨 Modern UI
-
-* Dark theme interface
-* Responsive design
-* Loading states
-* Error handling
-* Professional dashboard layout
-
----
-
-# 🏗️ Tech Stack
-
-## Frontend
-
-* React
-* Vite
-* Axios
-
-## Backend
-
-* Node.js
-* Express.js
-* Multer
-* PDF Parse
-
-## AI Integration
-
-* Gemini API
-
----
-
-# 📁 Project Structure
+Project analyzed:
 
 ```text
-ask-my-notes
+meeting-summary-agent
+```
+
+This project automatically generates meeting summaries using Gemini AI and stores the results in both a text file and a SQLite database.
+
+---
+
+# High-Level Architecture
+
+```text
+Meeting Transcript
+        ↓
+Read Transcript
+        ↓
+Generate Prompt
+        ↓
+Gemini AI
+        ↓
+Meeting Summary
+        ↓
+Save to Text File
+        ↓
+Save to SQLite Database
+```
+
+---
+
+# Project Structure
+
+```text
+meeting-summary-agent/
 │
-├── client
-│   ├── src
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
-│   └── package.json
+├── app.py
+├── database.py
+├── meeting_summaries.db
+├── .env
 │
-├── server
-│   ├── routes
-│   │   ├── upload.js
-│   │   └── ask.js
-│   │
-│   ├── services
-│   │   ├── geminiService.js
-│   │   └── documentStore.js
-│   │
-│   ├── app.js
-│   └── package.json
+├── transcripts/
+│   └── sample_meeting.txt
 │
-├── screenshots
+├── outputs/
+│   └── meeting_summary.txt
 │
-├── README.md
-└── .gitignore
+├── screenshots/
+│
+├── repo-analysis.md
+│
+├── bug-analysis.md
+│
+├── pr-draft.md
+│
+└── README.md
 ```
 
 ---
 
-# ⚙️ Installation
+# Codebase Understanding
 
-## Clone Repository
+## app.py
 
-```bash
-git clone https://github.com/YOUR_USERNAME/ask-my-notes.git
+Responsible for:
 
-cd ask-my-notes
-```
+* Loading environment variables
+* Reading transcript files
+* Sending prompts to Gemini AI
+* Generating meeting summaries
+* Saving summaries to file
+* Saving summaries to database
 
 ---
 
-## Backend Setup
+## database.py
 
-```bash
-cd server
+Responsible for:
 
-npm install
+* Creating SQLite database connection
+* Creating summary table
+* Inserting generated summaries
+* Managing database transactions
 
-node app.js
+---
+
+# Bug Identified
+
+## Issue
+
+Application crashes when transcript file does not exist.
+
+Current implementation:
+
+```python
+def read_transcript(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        return f.read()
 ```
 
-Backend runs on:
+If the file path is incorrect:
 
 ```text
-http://localhost:5000
+FileNotFoundError
+```
+
+Application terminates unexpectedly.
+
+---
+
+# Root Cause Analysis
+
+The function does not handle file-related exceptions.
+
+Missing:
+
+```python
+try-except
+```
+
+block for invalid file paths.
+
+---
+
+# Proposed Fix
+
+Updated implementation:
+
+```python
+def read_transcript(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+
+    except FileNotFoundError:
+        print(f"Error: {file_path} not found")
+        exit()
 ```
 
 ---
 
-## Frontend Setup
+# Benefits of Fix
 
-```bash
-cd client
+* Prevents application crashes
+* Improves user experience
+* Provides meaningful error messages
+* Makes application more robust
 
-npm install
+---
 
-npm run dev
-```
+# AI-Assisted Analysis
 
-Frontend runs on:
+AI tools were used to:
+
+* Understand project architecture
+* Analyze code flow
+* Identify potential failure points
+* Generate root-cause analysis
+* Validate proposed solution
+
+---
+
+# PR Draft
+
+## Title
 
 ```text
-http://localhost:5173
+Fix transcript file handling by adding FileNotFoundError protection
 ```
 
----
-
-# 🔑 Environment Variables
-
-Create:
+## Description
 
 ```text
-server/.env
-```
+Added error handling to read_transcript() to prevent application crashes
+when transcript files are missing.
 
-Add:
-
-```env
-GEMINI_API_KEY=your_api_key_here
-```
-
----
-
-# 📡 API Endpoints
-
-## Upload PDF
-
-```http
-POST /api/upload
-```
-
-### Request
-
-```form-data
-file : pdf
-```
-
-### Response
-
-```json
-{
-  "success": true
-}
+Changes:
+- Added try-except block
+- Added user-friendly error message
+- Prevented unexpected termination
 ```
 
 ---
 
-## Ask Question
+# Deliverables Completed
 
-```http
-POST /api/ask
-```
-
-### Request
-
-```json
-{
-  "question": "What is the student's CGPA?"
-}
-```
-
-### Response
-
-```json
-{
-  "success": true,
-  "answer": "The student's CGPA is 8.56 / 10.",
-  "citations": [1],
-  "usage": {
-    "promptTokens": 120,
-    "completionTokens": 30,
-    "totalTokens": 150
-  }
-}
-```
+* Codebase onboarding completed
+* Architecture analysis completed
+* Repository documentation completed
+* Bug identified
+* Root cause analyzed
+* Fix implemented
+* PR draft prepared
 
 ---
 
-# 🖼️ Screenshots
+# Status
 
-## Home Screen
+✅ Repository Onboarding Complete
 
-![Home Screen](./screenshots/home.png)
+✅ Codebase Analysis Complete
 
----
+✅ Bug Investigation Complete
 
-## Ask Question-Answer
+✅ Fix Plan Complete
 
-![Ask Question-Answer](./screenshots/ask-question-answer-response.png)
-
----
-
-## Postman Testing
-
-![Postman](./screenshots/postman-upload.png)
-![Postman](./screenshots/postman-ask.png)
+✅ PR Draft Ready
 
 ---
 
-# 🔄 Application Flow
+## Screenshots
+
+
+
+### Bug
+
+
+
+![Meeting agent](meeting-summary-agent/screenshots/bug.png)
+
+
+
+### Bug-fixed
+
+
+
+![Saved output](meeting-summary-agent/screenshots/bug-fixed.png)
+
+---
+### Files Added
 
 ```text
-User Uploads PDF
-        │
-        ▼
-PDF Text Extraction
-        │
-        ▼
-Store Document Content
-        │
-        ▼
-User Asks Question
-        │
-        ▼
-Gemini API Processing
-        │
-        ▼
-Generate Answer
-        │
-        ▼
-Return Citations + Token Usage
+README.md
+repo-analysis.md
+bug-analysis.md
+pr-draft.md
+```
+
+### Files Updated
+
+```text
+app.py
 ```
 
 ---
-# Live Link
-[Live Link](https://ask-my-notes-dusky.vercel.app/)
 
-# 🎯 Learning Outcomes
-
-Through this project I learned:
-
-* PDF processing using Node.js
-* File uploads with Multer
-* REST API development
-* Gemini API integration
-* Prompt engineering
-* React state management
-* Error handling strategies
-* Token usage tracking
-* Building AI-powered applications
-
----
-
-# 🚀 Future Improvements
-
-* Vector Database Integration
-* Semantic Search
-* RAG Architecture
-* Multi-document Support
-* Authentication & Authorization
-* Chat History
-* Document Summarization
-* Cloud Storage Integration
-
+**Day 16 Status: Completed** 🚀
