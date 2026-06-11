@@ -13,8 +13,12 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 
 # TOOL 1: Read Transcript
 def read_transcript(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
-        return f.read()
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        print(f"Error: {file_path} not found")
+        exit()
 
 # TOOL 2: Save Summary to File
 def save_to_file(summary):
