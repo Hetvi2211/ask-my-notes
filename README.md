@@ -96,15 +96,15 @@ The meeting focused on the upcoming dashboard launch scheduled for next week. Ba
 
 ### Meeting agent
 
-![Meeting agent](screenshots/meeting-agent-demo.png)
+![Meeting agent](meeting-summary-agent/screenshots/meeting-agent-demo.png)
 
 ### Saved output
 
-![Saved output](screenshots/saved-output.png)
+![Saved output](meeting-summary-agent/screenshots/saved-output.png)
 
 ### Database Records
 
-![Database](screenshots/db-meeting-summaries.png)
+![Database](meeting-summary-agent/screenshots/db-meeting-summaries.png)
 
 ---
 
