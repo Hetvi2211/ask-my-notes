@@ -1,7 +1,8 @@
 import os
+from flask import Flask, request, render_template
 from dotenv import load_dotenv
-from database import save_to_db
 import google.generativeai as genai
+from flask import render_template
 
 load_dotenv()
 
@@ -9,31 +10,24 @@ genai.configure(
     api_key=os.getenv("GEMINI_API_KEY")
 )
 
-model = genai.GenerativeModel("gemini-2.0-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
-# TOOL 1: Read Transcript
-def read_transcript(file_path):
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            return f.read()
-    except FileNotFoundError:
-        print(f"Error: {file_path} not found")
-        exit()
+app = Flask(__name__)
 
-# TOOL 2: Save Summary to File
-def save_to_file(summary):
-    output_path = "outputs/meeting_summary.txt"
+if __name__ == "__main__":
+    app.run()
 
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(summary)
+@app.route("/", methods=["GET", "POST"])
+def home():
 
-    return output_path
+    summary = ""
+    transcript = ""
 
-transcript = read_transcript(
-    "transcripts/sample_meeting.txt"
-)
+    if request.method == "POST":
 
-prompt = f"""
+        transcript = request.form["transcript"]
+
+        prompt = f"""
 You are a meeting assistant.
 
 Analyze this meeting transcript.
@@ -49,18 +43,18 @@ Transcript:
 {transcript}
 """
 
-response = model.generate_content(prompt)
+        try:
+            response = model.generate_content(prompt)
+            summary = response.text
 
-summary = response.text
+        except Exception as e:
+            summary = f"Error: {str(e)}"
 
-# Save to file
-path = save_to_file(summary)
+    return render_template(
+    "index.html",
+    summary=summary,
+    transcript=transcript
+)
 
-# Save to SQLite database
-save_to_db(summary)
-
-print("\n===== MEETING SUMMARY =====\n")
-print(summary)
-
-print("\nSaved to:", path)
-print("Saved to SQLite Database")
+if __name__ == "__main__":
+    app.run(debug=True)
