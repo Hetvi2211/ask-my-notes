@@ -1,315 +1,124 @@
-# 📄 Ask My Notes
+# Meeting Summary Agent
 
-AI-powered PDF Question Answering application that allows users to upload PDF documents and ask natural language questions about their content.
+## Overview
 
-Built using **React, Node.js, Express, PDF Parse, and Gemini AI**.
+Meeting Summary Agent is a custom AI agent built using Python and Google Gemini API.
 
----
+The agent reads a meeting transcript, analyzes the discussion, extracts important information, and generates:
 
-## 🚀 Project Overview
+* Meeting Summary
+* Action Items
+* Owners/Assignees
 
-Ask My Notes helps users interact with PDF documents through a conversational interface.
-
-Instead of manually searching through long documents, users can:
-
-✅ Upload a PDF
-
-✅ Extract text automatically
-
-✅ Ask questions in natural language
-
-✅ Get AI-generated answers
-
-✅ View source citations
-
-✅ Track token usage and telemetry
+The generated summary is saved to a text file and stored in a SQLite database for future reference.
 
 ---
 
-## ✨ Features
+## Features
 
-### 📤 PDF Upload
-
-* Upload PDF documents directly from the browser
-* Drag & Drop support
-* File validation
-* Automatic text extraction
-
-### 🤖 AI-Powered Q&A
-
-* Ask questions about uploaded documents
-* Context-aware responses
-* Gemini API integration
-* Fallback mode when API quota is unavailable
-
-### 📚 Citations
-
-* Shows document page references
-* Improves answer reliability
-* Makes responses traceable
-
-### 📊 Usage Analytics
-
-* Prompt token tracking
-* Completion token tracking
-* Total token usage
-
-### 🎨 Modern UI
-
-* Dark theme interface
-* Responsive design
-* Loading states
-* Error handling
-* Professional dashboard layout
+* Transcript Analysis using Gemini
+* Meeting Summary Generation
+* Action Item Extraction
+* Owner Identification
+* Save Summary to Text File
+* Save Summary to SQLite Database
+* Custom Agent Implementation (No Workflow Tools)
 
 ---
 
-# 🏗️ Tech Stack
+## Project Structure
 
-## Frontend
+meeting-summary-agent/
 
-* React
-* Vite
-* Axios
+├── app.py
 
-## Backend
+├── database.py
 
-* Node.js
-* Express.js
-* Multer
-* PDF Parse
+├── view_db.py
 
-## AI Integration
+├── meeting_summaries.db
 
-* Gemini API
+├── outputs/
 
----
+│ └── meeting_summary.txt
 
-# 📁 Project Structure
+└── transcripts/
 
-```text
-ask-my-notes
-│
-├── client
-│   ├── src
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
-│   └── package.json
-│
-├── server
-│   ├── routes
-│   │   ├── upload.js
-│   │   └── ask.js
-│   │
-│   ├── services
-│   │   ├── geminiService.js
-│   │   └── documentStore.js
-│   │
-│   ├── app.js
-│   └── package.json
-│
-├── screenshots
-│
-├── README.md
-└── .gitignore
-```
+└── sample_meeting.txt
 
 ---
 
-# ⚙️ Installation
+## Tools Used
 
-## Clone Repository
+### Tool 1: Transcript Reader
 
-```bash
-git clone https://github.com/YOUR_USERNAME/ask-my-notes.git
+Reads meeting transcripts from text files.
 
-cd ask-my-notes
-```
+### Tool 2: Summary Storage
 
----
+Stores generated summaries in:
 
-## Backend Setup
-
-```bash
-cd server
-
-npm install
-
-node app.js
-```
-
-Backend runs on:
-
-```text
-http://localhost:5000
-```
+* Text File
+* SQLite Database
 
 ---
 
-## Frontend Setup
+## Technologies
 
-```bash
-cd client
-
-npm install
-
-npm run dev
-```
-
-Frontend runs on:
-
-```text
-http://localhost:5173
-```
+* Python
+* Google Gemini API
+* SQLite
+* python-dotenv
 
 ---
 
-# 🔑 Environment Variables
+## Sample Output
 
-Create:
+### Meeting Summary
 
-```text
-server/.env
-```
+The meeting focused on the upcoming dashboard launch scheduled for next week. Backend API development is complete. Frontend testing remains pending and must be completed by Friday. Documentation preparation is required. Deployment responsibilities were assigned.
 
-Add:
+### Action Items
 
-```env
-GEMINI_API_KEY=your_api_key_here
-```
+* Complete frontend testing
+* Prepare documentation
+* Deploy application
 
----
+### Owners
 
-# 📡 API Endpoints
-
-## Upload PDF
-
-```http
-POST /api/upload
-```
-
-### Request
-
-```form-data
-file : pdf
-```
-
-### Response
-
-```json
-{
-  "success": true
-}
-```
+* Hetvi → Frontend Testing
+* Nauman → Deployment
+* Team → Documentation
 
 ---
 
-## Ask Question
+## How to Run
 
-```http
-POST /api/ask
-```
+Install dependencies:
 
-### Request
+pip install -r requirements.txt
 
-```json
-{
-  "question": "What is the student's CGPA?"
-}
-```
+Create .env file:
 
-### Response
+GEMINI_API_KEY=your_api_key
 
-```json
-{
-  "success": true,
-  "answer": "The student's CGPA is 8.56 / 10.",
-  "citations": [1],
-  "usage": {
-    "promptTokens": 120,
-    "completionTokens": 30,
-    "totalTokens": 150
-  }
-}
-```
+Run agent:
+
+python app.py
+
+View database records:
+
+python view_db.py
 
 ---
 
-# 🖼️ Screenshots
+## Learning Outcomes
 
-## Home Screen
+* Built a custom AI agent without workflow automation tools.
+* Integrated Google Gemini API.
+* Implemented tool usage within an agent workflow.
+* Generated structured meeting summaries.
+* Stored outputs in files and databases.
+* Understood real-world AI agent architecture.
 
-![Home Screen](./screenshots/home.png)
-
----
-
-## Ask Question-Answer
-
-![Ask Question-Answer](./screenshots/ask-question-answer-response.png)
-
----
-
-## Postman Testing
-
-![Postman](./screenshots/postman-upload.png)
-![Postman](./screenshots/postman-ask.png)
-
----
-
-# 🔄 Application Flow
-
-```text
-User Uploads PDF
-        │
-        ▼
-PDF Text Extraction
-        │
-        ▼
-Store Document Content
-        │
-        ▼
-User Asks Question
-        │
-        ▼
-Gemini API Processing
-        │
-        ▼
-Generate Answer
-        │
-        ▼
-Return Citations + Token Usage
-```
-
----
-# Live Link
-[Live Link](https://ask-my-notes-dusky.vercel.app/)
-
-# 🎯 Learning Outcomes
-
-Through this project I learned:
-
-* PDF processing using Node.js
-* File uploads with Multer
-* REST API development
-* Gemini API integration
-* Prompt engineering
-* React state management
-* Error handling strategies
-* Token usage tracking
-* Building AI-powered applications
-
----
-
-# 🚀 Future Improvements
-
-* Vector Database Integration
-* Semantic Search
-* RAG Architecture
-* Multi-document Support
-* Authentication & Authorization
-* Chat History
-* Document Summarization
-* Cloud Storage Integration
 
