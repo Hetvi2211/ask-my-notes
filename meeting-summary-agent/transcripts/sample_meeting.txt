@@ -1,0 +1,11 @@
+Rahul: We need to launch the dashboard next week.
+
+Krunal: Backend API is complete.
+
+Nauman: Frontend testing is pending.
+
+Rahul: Hetvi will complete testing by Friday.
+
+Krunal: We should also prepare documentation.
+
+Nauman: I will handle deployment.
