@@ -92,6 +92,22 @@ The meeting focused on the upcoming dashboard launch scheduled for next week. Ba
 
 ---
 
+## Screenshots
+
+### Meeting agent
+
+![Meeting agent](screenshots/meeting-agent-demo.png)
+
+### Saved output
+
+![Saved output](screenshots/saved-output.png)
+
+### Database Records
+
+![Database](screenshots/db-meeting-summaries.png)
+
+---
+
 ## How to Run
 
 Install dependencies:
