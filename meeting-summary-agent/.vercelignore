@@ -1,0 +1,4 @@
+.env
+meeting_summaries.db
+outputs/
+__pycache__/

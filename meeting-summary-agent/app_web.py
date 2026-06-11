@@ -14,6 +14,8 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 
 app = Flask(__name__)
 
+if __name__ == "__main__":
+    app.run()
 
 @app.route("/", methods=["GET", "POST"])
 def home():
