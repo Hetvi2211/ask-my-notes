@@ -223,25 +223,6 @@ Changes:
 
 ---
 
-## Screenshots
-
-
-
-### Bug
-
-
-
-![Meeting agent](meeting-summary-agent/screenshots/bug.png)
-
-
-
-### Bug-fixed
-
-
-
-![Saved output](meeting-summary-agent/screenshots/bug-fixed.png)
-
----
 ### Files Added
 
 ```text
