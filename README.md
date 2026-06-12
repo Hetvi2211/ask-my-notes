@@ -1,9 +1,3 @@
-Since Day 16 is **Real Repo Onboarding**, the README should focus on **understanding the codebase, identifying a bug, root-cause analysis, and the proposed fix plan** rather than building a new project.
-
-You can directly paste the following into `README.md`:
-
----
-
 # Day 16 – Real Repo Onboarding & PR Planning
 
 ## Objective
